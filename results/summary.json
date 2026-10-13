@@ -1,0 +1,167 @@
+{
+  "meshmind_version": "1.0.0",
+  "config": {
+    "topology": {
+      "name": "abilene",
+      "capacity_scale": 1.0,
+      "max_utilization": 1.5
+    },
+    "traffic": {
+      "profile": "high",
+      "flows_per_episode": 25
+    },
+    "environment": {
+      "max_steps": 20,
+      "load_decay": 0.85,
+      "invalid_action_penalty": -100.0,
+      "loop_penalty": -100.0,
+      "max_steps_penalty": -100.0,
+      "latency_weight": 0.1,
+      "delivery_reward": 10.0,
+      "drop_penalty": 50.0
+    },
+    "agent": {
+      "alpha": 0.1,
+      "gamma": 0.95,
+      "epsilon_start": 1.0,
+      "epsilon_end": 0.05,
+      "epsilon_decay": 0.998
+    },
+    "seeds": [
+      42,
+      100,
+      2026
+    ],
+    "train_episodes": 3000,
+    "eval_episodes": 100,
+    "results_dir": "results"
+  },
+  "seeds": [
+    42,
+    100,
+    2026
+  ],
+  "aggregation": "mean and sample std (ddof=1) across seeds",
+  "policies": {
+    "q_learning": {
+      "pdr": {
+        "mean": 0.6070103435512767,
+        "std": 0.008315422557794237
+      },
+      "plr": {
+        "mean": 0.3929896564487232,
+        "std": 0.008315422557794237
+      },
+      "mean_latency_ms": {
+        "mean": 79.49791827938243,
+        "std": 0.26738152945052984
+      },
+      "mean_throughput": {
+        "mean": 54.533081261058896,
+        "std": 0.5253991554131938
+      },
+      "avg_link_utilization": {
+        "mean": 0.38149218858698625,
+        "std": 0.0022347088282991686
+      },
+      "routing_failures": {
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "mean_hops": {
+        "mean": 2.5369333333333333,
+        "std": 0.008544783984006547
+      }
+    },
+    "shortest_path": {
+      "pdr": {
+        "mean": 0.5917670080348528,
+        "std": 0.007400237092755188
+      },
+      "plr": {
+        "mean": 0.4082329919651471,
+        "std": 0.007400237092755188
+      },
+      "mean_latency_ms": {
+        "mean": 78.29597214196308,
+        "std": 0.7090157319624278
+      },
+      "mean_throughput": {
+        "mean": 53.16383495153224,
+        "std": 0.45266969890418396
+      },
+      "avg_link_utilization": {
+        "mean": 0.38047703782116743,
+        "std": 0.0013071886263753647
+      },
+      "routing_failures": {
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "mean_hops": {
+        "mean": 2.5524000000000004,
+        "std": 0.016380476183554607
+      }
+    },
+    "congestion_aware": {
+      "pdr": {
+        "mean": 0.6064940860066558,
+        "std": 0.008484847602662125
+      },
+      "plr": {
+        "mean": 0.39350591399334417,
+        "std": 0.008484847602662124
+      },
+      "mean_latency_ms": {
+        "mean": 80.62207974636749,
+        "std": 1.4278605235809065
+      },
+      "mean_throughput": {
+        "mean": 54.486670829151315,
+        "std": 0.5427524428110405
+      },
+      "avg_link_utilization": {
+        "mean": 0.41722635575777883,
+        "std": 0.0012149880189169355
+      },
+      "routing_failures": {
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "mean_hops": {
+        "mean": 2.723733333333333,
+        "std": 0.006416645021608481
+      }
+    },
+    "random": {
+      "pdr": {
+        "mean": 0.21242456462224732,
+        "std": 0.0035773804501769767
+      },
+      "plr": {
+        "mean": 0.7875754353777528,
+        "std": 0.003577380450176996
+      },
+      "mean_latency_ms": {
+        "mean": 182.67387970133464,
+        "std": 2.990529054133716
+      },
+      "mean_throughput": {
+        "mean": 19.085625035291663,
+        "std": 0.4048721022296427
+      },
+      "avg_link_utilization": {
+        "mean": 0.6617138261300675,
+        "std": 0.0043697838673082065
+      },
+      "routing_failures": {
+        "mean": 1019.3333333333334,
+        "std": 33.24655370611115
+      },
+      "mean_hops": {
+        "mean": 4.341681154581843,
+        "std": 0.07791130246662498
+      }
+    }
+  }
+}

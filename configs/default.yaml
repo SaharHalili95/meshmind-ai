@@ -1,0 +1,33 @@
+# MeshMind AI default experiment configuration.
+
+topology:
+  name: abilene            # small_grid | abilene
+  capacity_scale: 1.0      # multiplies every link capacity
+  max_utilization: 1.5     # utilization cap used by the congestion penalty
+
+traffic:
+  profile: high            # low | moderate | high | dynamic
+  flows_per_episode: 25
+
+environment:
+  max_steps: 20            # hop cap per flow
+  load_decay: 0.85         # link load multiplier between consecutive flows
+  invalid_action_penalty: -100.0
+  loop_penalty: -100.0
+  max_steps_penalty: -100.0
+  latency_weight: 0.1      # reward per ms of hop latency
+  delivery_reward: 10.0
+  drop_penalty: 50.0       # reward per fraction of demand dropped on overloaded links
+
+agent:
+  alpha: 0.1
+  gamma: 0.95
+  epsilon_start: 1.0
+  epsilon_end: 0.05
+  epsilon_decay: 0.998
+
+experiment:
+  seeds: [42, 100, 2026]
+  train_episodes: 3000
+  eval_episodes: 100
+  results_dir: results
