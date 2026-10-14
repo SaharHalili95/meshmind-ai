@@ -161,6 +161,7 @@ meshmind-ai/
 * [Mathematical model](docs/mathematical_model.md): network model, M/M/1 proxy, MDP, Q-learning
 * [Experiment methodology](docs/experiment_methodology.md): seeds, train/eval split, aggregation, full results
 * [Interview guide](docs/interview_guide.md): trade-offs, failure cases found during development, scaling limits
+* [Learning hub (Hebrew)](docs/learning/README.md): project planning, C4/UML architecture diagrams, 20 troubleshooting cases, exercises
 
 ## Limitations
 
