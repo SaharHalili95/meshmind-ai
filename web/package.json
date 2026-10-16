@@ -1,0 +1,33 @@
+{
+  "name": "meshmind-web",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc --noEmit && vite build",
+    "build:pages": "vue-tsc --noEmit && vite build --mode pages",
+    "preview": "vite preview",
+    "typecheck": "vue-tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@primeuix/themes": "2.0.3",
+    "chart.js": "4.4.9",
+    "primeicons": "7.0.0",
+    "primevue": "4.5.5",
+    "vue": "3.5.43",
+    "vue-i18n": "11.4.12",
+    "vue-router": "4.5.1"
+  },
+  "devDependencies": {
+    "@types/node": "22.15.21",
+    "@vitejs/plugin-vue": "5.2.4",
+    "@vue/test-utils": "2.4.6",
+    "jsdom": "26.1.0",
+    "typescript": "5.8.3",
+    "vite": "6.4.3",
+    "vitest": "4.1.11",
+    "vue-tsc": "2.2.10"
+  }
+}

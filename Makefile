@@ -1,6 +1,6 @@
 PYTHON ?= .venv/bin/python
 
-.PHONY: install test lint format smoke experiments plot clean
+.PHONY: install test lint format smoke experiments plot web-data web clean
 
 install:
 	python3 -m venv .venv
@@ -26,6 +26,13 @@ experiments:
 
 plot:
 	$(PYTHON) -m meshmind.cli plot
+
+web-data:
+	$(PYTHON) scripts/export_web_data.py
+
+web:
+	npm --prefix web install
+	npm --prefix web run dev
 
 clean:
 	rm -rf results/*.json results/*.csv results/figures .pytest_cache .ruff_cache

@@ -7,10 +7,21 @@ simulated backbone network (Abilene, 12 PoPs). The agent only sees *local* conge
 the current router. It is benchmarked against static shortest-path routing, a global
 congestion-aware router, and random routing, across multiple seeds, on held-out traffic.
 
+[![CI](https://github.com/SaharHalili95/meshmind-ai/actions/workflows/ci.yml/badge.svg)](https://github.com/SaharHalili95/meshmind-ai/actions/workflows/ci.yml)
 ![Python](https://img.shields.io/badge/python-3.11%2B-blue)
-![Tests](https://img.shields.io/badge/tests-116%20passing-brightgreen)
-![Lint](https://img.shields.io/badge/ruff-clean-black)
 ![License](https://img.shields.io/badge/license-MIT-lightgrey)
+
+**Live demo:** https://saharhalili95.github.io/meshmind-ai/ shows the benchmark results, and
+its **Live simulator** trains a real Q-learning agent in your browser (a TypeScript port of the
+same environment and update rule) so you can watch it route traffic hop by hop, with the
+Q-value behind every decision. It also has an interactive architecture walkthrough, a
+learning hub and a troubleshooting guide, in English and Hebrew.
+
+| Benchmark results | Live simulator |
+| --- | --- |
+| ![Results page](docs/screenshots/1-results.jpg) | ![Simulator routing traffic on Abilene](docs/screenshots/2-simulator.jpg) |
+| **How it works** | **Troubleshooting** |
+| ![Architecture walkthrough](docs/screenshots/3-architecture.jpg) | ![Troubleshooting guide](docs/screenshots/4-troubleshooting.jpg) |
 
 ## Highlights
 
@@ -23,6 +34,10 @@ congestion-aware router, and random routing, across multiple seeds, on held-out 
   from one command.
 * **Engineering quality:** typed and validated config, a strict YAML loader, no global RNG,
   116 pytest tests (about 2 s), and `ruff check` + `ruff format` clean.
+* **Interactive website:** Vue 3 + TypeScript + PrimeVue, deployed to GitHub Pages by
+  GitHub Actions. The browser port reproduces the Python results (Q-learning 0.605 vs
+  shortest path 0.593 PDR on seed 42) and is covered by 26 Vitest tests, including
+  translation parity between English and Hebrew.
 
 ## Results
 
@@ -124,12 +139,26 @@ All commands accept `--config path.yaml`. To run a different scenario, copy
 profile (`low` | `moderate` | `high` | `dynamic`), the reward weights, or the agent
 hyperparameters.
 
+## Website
+
+```bash
+make web-data   # export results/ into web/src/data/results.json
+make web        # npm install + dev server on http://localhost:5174
+```
+
+`web/src/sim/` is a line-by-line TypeScript port of `topology.py`, `traffic.py`,
+`environment.py`, `agent.py` and `baselines.py`. Pushing to `main` builds and deploys the
+site through `.github/workflows/pages.yml`.
+
 ## Testing
 
 ```bash
 make test      # or: python -m pytest
 make lint      # ruff check + ruff format --check
+cd web && npm test && npm run typecheck
 ```
+
+CI (`.github/workflows/ci.yml`) runs all of the above on every push and pull request.
 
 | Test module | Covers |
 |---|---|
@@ -152,7 +181,8 @@ meshmind-ai/
 ├── results/                      summary.json, per-seed + training CSVs, figures/
 ├── scripts/run_experiments.py    benchmark entry point
 ├── src/meshmind/                 package (topology → environment → agent → experiments)
-└── tests/                        pytest suite
+├── tests/                        pytest suite
+└── web/                          Vue 3 website (results, live simulator, guides)
 ```
 
 ## Documentation
