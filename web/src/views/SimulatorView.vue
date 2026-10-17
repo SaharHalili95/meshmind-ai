@@ -51,19 +51,24 @@ function train() {
   stopPlayback()
   const start = trainedEpisodes.value
   const end = start + trainTarget.value
+  // Train for a fixed time slice, then yield so the page stays responsive and redraws once.
   const chunk = () => {
     if (!training.value) return
-    const stop = Math.min(trainedEpisodes.value + 75, end)
-    for (let e = trainedEpisodes.value; e < stop; e++) {
+    const sliceEnd = performance.now() + 40
+    const points: { episode: number; reward: number }[] = []
+    let e = trainedEpisodes.value
+    while (e < end && performance.now() < sliceEnd) {
       rewards.push(trainEpisode(trainEnv, agent, SEED + e, e).totalReward)
-      if ((e + 1) % 25 === 0) {
+      e++
+      if (e % 25 === 0) {
         const window = rewards.slice(-50)
-        curve.value = [...curve.value, { episode: e + 1, reward: window.reduce((s, r) => s + r, 0) / window.length }]
+        points.push({ episode: e, reward: window.reduce((sum, r) => sum + r, 0) / window.length })
       }
     }
-    trainedEpisodes.value = stop
-    progress.value = Math.round(((stop - start) / (end - start)) * 100)
-    if (stop < end) setTimeout(chunk, 0)
+    if (points.length) curve.value = [...curve.value, ...points]
+    trainedEpisodes.value = e
+    progress.value = Math.round(((e - start) / (end - start)) * 100)
+    if (e < end) setTimeout(chunk, 0)
     else {
       training.value = false
       comparison.value = null
