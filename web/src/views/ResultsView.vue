@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import Button from 'primevue/button'
 import SelectButton from 'primevue/selectbutton'
+import Tag from 'primevue/tag'
 import type { ChartConfiguration } from 'chart.js'
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -23,6 +24,14 @@ const pdrGaps = seeds.map((seed) => {
   return ql.pdr - sp.pdr
 })
 const utilSaving = 1 - p.q_learning.avg_link_utilization.mean / p.congestion_aware.avg_link_utilization.mean
+const heldOutFlows = seeds.length * results.config.eval_episodes * results.config.traffic.flows_per_episode
+
+const comparisons = results.comparisons.filter((c) => c.baseline !== 'random')
+const vsShortest = results.comparisons.find((c) => c.baseline === 'shortest_path' && c.metric === 'pdr')!
+const scaleOf = (c: { metric: MetricKey }) => (c.metric === 'mean_latency_ms' ? 1 : 100)
+const unitOf = (c: { metric: MetricKey }) => (c.metric === 'mean_latency_ms' ? ' ms' : ` ${t('results.pts')}`)
+const signed = (v: number, digits = 2) => `${v > 0 ? '+' : ''}${fmt(v, digits)}`
+const pValue = (v: number) => (v < 0.001 ? '< 0.001' : fmt(v, 3))
 
 const metricOptions = computed(() =>
   (['pdr', 'mean_latency_ms', 'mean_throughput', 'avg_link_utilization'] as MetricKey[]).map((value) => ({ value, label: t(`metrics.${value}`) })))
@@ -60,6 +69,60 @@ const comparisonChart = computed(() => {
       },
     },
   })
+})
+
+const sweepChart = computed(() => {
+  void locale.value
+  const sweep = results.loadSweep
+  const labels = sweep.map((pt) => fmt(pt.relative_load, 2))
+  return (tk: ChartTokens): ChartConfiguration => {
+    const lines = (['shortest_path', 'congestion_aware'] as const).flatMap((baseline, i) => {
+      const color = tk.series[i + 1]!
+      const name = t('results.sig.vs', { name: t(`policies.${baseline}`) })
+      return [
+        { label: `${name} high`, data: sweep.map((pt) => pt[baseline].ci_high * 100), borderWidth: 0, pointRadius: 0, fill: '+2', backgroundColor: `${color}26` },
+        {
+          label: name,
+          data: sweep.map((pt) => pt[baseline].mean_diff * 100),
+          borderColor: color,
+          borderWidth: 2,
+          pointRadius: 6,
+          pointHoverRadius: 8,
+          pointBorderWidth: 2,
+          pointBorderColor: color,
+          pointBackgroundColor: sweep.map((pt) => (pt[baseline].significant ? color : tk.surface)),
+          fill: false,
+        },
+        { label: `${name} low`, data: sweep.map((pt) => pt[baseline].ci_low * 100), borderWidth: 0, pointRadius: 0, fill: false },
+      ]
+    })
+    return {
+      type: 'line',
+      data: { labels, datasets: lines },
+      options: {
+        maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: { labels: { color: tk.text, usePointStyle: true, filter: (item) => !/ (high|low)$/.test(item.text) } },
+          tooltip: {
+            filter: (item) => item.datasetIndex % 3 === 1,
+            callbacks: {
+              title: (items) => `${t('results.sweepX')}: ${items[0]?.label}`,
+              label: (ctx) => {
+                const baseline = ctx.datasetIndex < 3 ? 'shortest_path' : 'congestion_aware'
+                const c = sweep[ctx.dataIndex]![baseline]
+                return `${ctx.dataset.label}: ${signed(c.mean_diff * 100)} ${t('results.pts')} (p ${pValue(c.p_value)})`
+              },
+            },
+          },
+        },
+        scales: {
+          x: { grid: { display: false }, ticks: { color: tk.text }, title: { display: true, text: t('results.sweepX'), color: tk.text } },
+          y: { grid: { color: (ctx) => (ctx.tick.value === 0 ? tk.text : tk.grid) }, ticks: { color: tk.text }, title: { display: true, text: t('results.sweepY'), color: tk.text } },
+        },
+      },
+    }
+  }
 })
 
 const rewardChart = computed(() => {
@@ -116,11 +179,12 @@ const rewardChart = computed(() => {
     </section>
 
     <div class="tiles">
-      <StatTile icon="pi pi-send" :label="t('results.tilePdr')" :value="pct(p.q_learning.pdr.mean)" :caption="t('results.tilePdrCaption', { std: fmt(p.q_learning.pdr.std * 100, 1) })" />
-      <StatTile icon="pi pi-arrow-up-right" :label="t('results.tileGain')"
-        :value="`+${fmt(Math.min(...pdrGaps) * 100, 1)}–${fmt(Math.max(...pdrGaps) * 100, 1)}`" :caption="t('results.tileGainCaption')" />
+      <StatTile icon="pi pi-send" :label="t('results.tilePdr')" :value="pct(p.q_learning.pdr.mean)"
+        :caption="t('results.tilePdrCaption', { std: fmt(p.q_learning.pdr.std * 100, 1), seeds: seeds.length })" />
+      <StatTile icon="pi pi-arrow-up-right" :label="t('results.tileGain')" :value="`${signed(vsShortest.mean_diff * 100)} ${t('results.pts')}`"
+        :caption="t('results.tileGainCaption', { low: signed(vsShortest.ci_low * 100), high: signed(vsShortest.ci_high * 100), p: pValue(vsShortest.p_value), wins: vsShortest.wins, n: vsShortest.n })" />
       <StatTile icon="pi pi-bolt" :label="t('results.tileUtil')" :value="pct(utilSaving)" :caption="t('results.tileUtilCaption')" />
-      <StatTile icon="pi pi-check-circle" :label="t('results.tileFailures')" :value="fmt(p.q_learning.routing_failures.mean, 0)" :caption="t('results.tileFailuresCaption')" />
+      <StatTile icon="pi pi-check-circle" :label="t('results.tileFailures')" :value="fmt(p.q_learning.routing_failures.mean, 0)" :caption="t('results.tileFailuresCaption', { flows: heldOutFlows.toLocaleString() })" />
     </div>
 
     <div class="grid-2">
@@ -161,7 +225,47 @@ const rewardChart = computed(() => {
           </tbody>
         </table>
       </div>
-      <p class="muted note">{{ t('results.tableNote') }}</p>
+      <p class="muted note">{{ t('results.tableNote', { flows: (results.config.eval_episodes * results.config.traffic.flows_per_episode).toLocaleString(), seeds: seeds.length }) }}</p>
+    </section>
+
+    <section class="panel sig-panel">
+      <h2>{{ t('results.sigTitle') }}</h2>
+      <p class="muted note top">{{ t('results.sigIntro', { n: seeds.length }) }}</p>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>{{ t('results.sig.comparison') }}</th>
+              <th>{{ t('results.sig.diff') }}</th>
+              <th>{{ t('results.sig.ci') }}</th>
+              <th>{{ t('results.sig.p') }}</th>
+              <th>{{ t('results.sig.wins') }}</th>
+              <th>{{ t('results.sig.verdict') }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="c in comparisons" :key="`${c.baseline}-${c.metric}`">
+              <td>{{ t(`metrics.${c.metric}`) }} · {{ t('results.sig.vs', { name: t(`policies.${c.baseline}`) }) }}</td>
+              <td class="num">{{ signed(c.mean_diff * scaleOf(c)) }}{{ unitOf(c) }}</td>
+              <td class="num">[{{ signed(c.ci_low * scaleOf(c)) }}, {{ signed(c.ci_high * scaleOf(c)) }}]</td>
+              <td class="num">{{ pValue(c.p_value) }}</td>
+              <td class="num">{{ c.wins }}/{{ c.n }}</td>
+              <td>
+                <Tag v-if="c.significant" icon="pi pi-check" :value="t('results.sig.significant')" severity="success" />
+                <Tag v-else icon="pi pi-minus" :value="t('results.sig.notSignificant')" severity="secondary" />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="muted note">{{ t('results.sigNote') }}</p>
+    </section>
+
+    <section v-if="results.loadSweep.length" class="panel sig-panel">
+      <h2>{{ t('results.sweepTitle') }}</h2>
+      <p class="muted note top">{{ t('results.sweepIntro') }}</p>
+      <ChartCanvas :build="sweepChart" :label="t('results.sweepTitle')" :height="320" />
+      <p class="muted note">{{ t('results.sweepNote', { n: seeds.length }) }}</p>
     </section>
 
     <div class="grid-2">
@@ -180,7 +284,7 @@ const rewardChart = computed(() => {
             <tr v-for="(seed, i) in seeds" :key="seed">
               <td class="num">{{ seed }}</td>
               <td v-for="name in POLICY_ORDER.slice(0, 3)" :key="name" class="num">{{ fmt(rows(name)[i]!.pdr, 4) }}</td>
-              <td class="num gain">+{{ fmt(pdrGaps[i]! * 100, 2) }}</td>
+              <td class="num gain">{{ signed(pdrGaps[i]! * 100) }}</td>
             </tr>
           </tbody>
         </table>
@@ -213,6 +317,8 @@ const rewardChart = computed(() => {
 .cta { display: flex; gap: 0.75rem; flex-wrap: wrap; }
 .panel-head { margin-bottom: 1rem; }
 .note { font-size: 0.8125rem; margin: 0.75rem 0 0; line-height: 1.55; }
+.note.top { margin: -0.5rem 0 1rem; }
+.sig-panel { margin-bottom: 1rem; }
 .table-panel { margin: 1rem 0; }
 .table-wrap { overflow-x: auto; }
 .highlight td { font-weight: 600; }

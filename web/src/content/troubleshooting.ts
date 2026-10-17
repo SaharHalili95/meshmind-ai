@@ -179,7 +179,7 @@ export const issues: Issue[] = [
     title: { en: 'std = 0.000 in the table', he: 'std = 0.000 בטבלה' },
     symptom: { en: 'Every ± value is zero.', he: 'כל ערכי ה-± הם אפס.' },
     cause: { en: 'Only one seed ran. The sample std (ddof=1) is undefined for n = 1, so 0 is reported.', he: 'רץ רק seed אחד. סטיית התקן המדגמית (ddof=1) לא מוגדרת עבור n = 1, ולכן מדווח 0.' },
-    fix: [{ en: 'Use at least 3 seeds. The CLI table hides ± when there is a single seed.', he: 'להשתמש בלפחות 3 seeds. טבלת ה-CLI מסתירה את ה-± כשיש seed יחיד.' }],
+    fix: [{ en: 'Use several seeds: 10 here, because with n seeds the smallest possible permutation p-value is 2/2ⁿ (0.25 for 3). The CLI table hides ± when there is a single seed.', he: 'להשתמש בכמה seeds: כאן 10, כי עם n seeds ה-p-value הקטן ביותר האפשרי במבחן פרמוטציות הוא 2/2ⁿ (0.25 עבור 3). טבלת ה-CLI מסתירה את ה-± כשיש seed יחיד.' }],
     code: 'src/meshmind/metrics.py',
   },
   {

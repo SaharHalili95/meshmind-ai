@@ -20,6 +20,26 @@ export interface PerSeedRow {
   mean_hops: number
 }
 
+export interface Comparison {
+  metric: MetricKey
+  baseline: PolicyName
+  mean_diff: number
+  ci_low: number
+  ci_high: number
+  p_value: number
+  wins: number
+  n: number
+  higher_is_better: boolean
+  significant: boolean
+}
+
+export interface SweepPoint {
+  relative_load: number
+  shortest_path: Comparison
+  congestion_aware: Comparison
+  pdr: Record<PolicyName, number>
+}
+
 export interface BenchmarkResults {
   config: {
     topology: { name: string }
@@ -31,6 +51,8 @@ export interface BenchmarkResults {
   seeds: number[]
   policies: Record<PolicyName, Record<MetricKey, Stat>>
   perSeed: PerSeedRow[]
+  comparisons: Comparison[]
+  loadSweep: SweepPoint[]
   rewardCurve: { window: number; episode: number[]; mean: number[]; std: number[] }
 }
 

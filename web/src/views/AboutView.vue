@@ -38,8 +38,9 @@ const lang = computed(() => locale.value as Locale)
       <div class="formula">git clone https://github.com/SaharHalili95/meshmind-ai.git
 cd meshmind-ai
 make install       # Python venv + dependencies
-make test          # 116 tests
-make experiments   # 3-seed benchmark + figures
+make test          # 130 tests
+make experiments   # 10-seed benchmark + significance tests + figures
+make sweep         # benchmark at 5 load levels
 cd web && npm install && npm run dev   # this website</div>
     </section>
   </div>

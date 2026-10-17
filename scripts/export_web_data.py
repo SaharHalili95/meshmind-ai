@@ -23,10 +23,15 @@ def build_payload(results_dir: Path) -> dict:
     curve = history.groupby("episode")["smoothed"].agg(["mean", "std"]).fillna(0.0)
     curve = curve.iloc[::CURVE_STEP]
 
+    sweep_path = results_dir / "load_sweep.json"
+    sweep = json.loads(sweep_path.read_text(encoding="utf-8")) if sweep_path.exists() else []
+
     return {
         "config": summary["config"],
         "seeds": summary["seeds"],
         "policies": summary["policies"],
+        "comparisons": summary.get("comparisons", []),
+        "loadSweep": sweep,
         "perSeed": per_seed.round(6).to_dict("records"),
         "rewardCurve": {
             "window": WINDOW,

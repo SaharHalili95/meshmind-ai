@@ -43,7 +43,7 @@ export const phases: Phase[] = [
     checkpoint: { en: 'Zero agent failures, and the agent matches or beats the baselines.', he: 'אפס כשלים לסוכן, והסוכן משתווה ל-baselines או עוקף אותם.' },
     critical: { en: 'Not in the original plan: reward calibration and the loop fixes (issues #13–#15). Always reserve time for this in RL work.', he: 'לא היה בתוכנית המקורית: כיול ה-reward ותיקוני הלולאות (תקלות #13–#15). בעבודת RL תמיד לשריין לזה זמן.' } },
   { title: { en: 'Experiments & docs', he: 'ניסויים ותיעוד' }, items: ['experiments.py', 'plotting.py', 'cli.py', 'tests', 'docs', 'web'],
-    checkpoint: { en: '3-seed benchmark end to end, 116 tests green, ruff clean, release on GitHub.', he: 'ניסוי 3 seeds מקצה לקצה, 116 בדיקות ירוקות, ruff נקי, שחרור ב-GitHub.' } },
+    checkpoint: { en: '10-seed benchmark with significance tests and a load sweep, all tests green, ruff clean, live site on GitHub Pages.', he: 'ניסוי 10 seeds עם מבחני מובהקות וסריקת עומס, כל הבדיקות ירוקות, ruff נקי, אתר חי ב-GitHub Pages.' } },
 ]
 
 export interface Decision {

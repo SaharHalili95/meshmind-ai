@@ -18,8 +18,8 @@ export const summarySections: SummarySection[] = [
     tech: 'Q-learning · Abilene',
     items: [
       { en: 'Question: can an agent that sees only local congestion match a router that sees the whole network?', he: 'השאלה: האם סוכן שרואה רק עומס מקומי יכול להשתוות לנתב שרואה את כל הרשת?' },
-      { en: '3 seeds, disjoint train and evaluation traffic, all policies scored on identical episodes.', he: '3 seeds, תעבורת אימון והערכה נפרדות, וכל המדיניות נבחנות על אותם פרקים בדיוק.' },
-      { en: 'Result: more traffic delivered than shortest path on every seed, and the same delivery as the global congestion-aware router with 8.5% less link utilization.', he: 'התוצאה: יותר תעבורה נמסרה מאשר ב-shortest path בכל seed, ואותה מסירה כמו הנתב הגלובלי congestion-aware עם 8.5% פחות ניצולת קישורים.' },
+      { en: '10 seeds, disjoint train and evaluation traffic, all policies scored on identical episodes, exact permutation tests with bootstrap CIs.', he: '10 seeds, תעבורת אימון והערכה נפרדות, כל המדיניות נבחנות על אותם פרקים בדיוק, ומבחני פרמוטציות מדויקים עם רווחי סמך bootstrap.' },
+      { en: 'Result: significantly more traffic delivered than shortest path (+1.8 pts, 10/10 seeds, p = 0.002), and a significant win over the global congestion-aware router on delivery, latency and link utilization (8.8% less). A load sweep shows a crossover: below load 0.9 the global router is slightly better.', he: 'התוצאה: יותר תעבורה באופן מובהק מאשר ב-shortest path ‏(‎+1.8 נק׳, 10/10 seeds, ‏p = 0.002), וניצחון מובהק על הנתב הגלובלי congestion-aware במסירה, בהשהיה ובניצולת הקישורים (8.8% פחות). סריקת עומס מראה נקודת מעבר: מתחת לעומס 0.9 הנתב הגלובלי טוב במעט.' },
       { en: 'Three real failures diagnosed and fixed: state aliasing, late credit assignment, and reward hacking.', he: 'שלוש תקלות אמיתיות אובחנו ותוקנו: state aliasing, credit assignment מאוחר ו-reward hacking.' },
     ],
   },
@@ -41,7 +41,7 @@ export const summarySections: SummarySection[] = [
     title: { en: 'Quality', he: 'איכות' },
     tech: 'pytest · ruff · Vitest',
     items: [
-      { en: '116 pytest tests that check exact numbers: hand-computed Bellman updates, the penalty formula, PDR edge cases.', he: '116 בדיקות pytest שבודקות מספרים מדויקים: עדכוני Bellman שחושבו ידנית, נוסחת העונש, מקרי קצה של PDR.' },
+      { en: '130 pytest tests that check exact numbers: hand-computed Bellman updates, the penalty formula, PDR edge cases, hand-enumerated permutation p-values.', he: '130 בדיקות pytest שבודקות מספרים מדויקים: עדכוני Bellman שחושבו ידנית, נוסחת העונש, מקרי קצה של PDR, ו-p-values של מבחן פרמוטציות שנספרו ידנית.' },
       { en: 'Every source of randomness is seeded, so every result regenerates bit for bit.', he: 'כל מקור אקראיות מקבל seed, כך שכל תוצאה משתחזרת ביט אחר ביט.' },
       { en: 'Type hints everywhere, typed and validated configuration, ruff check and format clean.', he: 'Type hints בכל מקום, הגדרות עם טיפוסים ואימות, ruff check ו-format נקיים.' },
       { en: 'CI on GitHub Actions runs the Python tests, lint, and the website type-check, tests and build.', he: 'CI ב-GitHub Actions מריץ את בדיקות ה-Python, lint, ואת בדיקות הטיפוסים, הבדיקות והבנייה של האתר.' },
