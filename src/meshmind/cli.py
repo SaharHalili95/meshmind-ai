@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import sys
 from collections.abc import Sequence
 from dataclasses import replace
@@ -14,11 +15,15 @@ from meshmind.agent import QLearningAgent
 from meshmind.config import ExperimentConfig, TopologyConfig, load_config
 from meshmind.evaluation import evaluate_agent, evaluate_policy
 from meshmind.experiments import (
+    DEFAULT_SWEEP_SCALES,
     build_baselines,
     build_environment,
+    format_comparisons,
     format_summary_table,
     run_experiment_pipeline,
+    run_load_sweep,
     run_seed,
+    summarize_load_sweep,
 )
 from meshmind.metrics import aggregate_metrics
 from meshmind.plotting import generate_all_plots
@@ -98,7 +103,30 @@ def cmd_experiments(args: argparse.Namespace) -> int:
     summary = run_experiment_pipeline(config, results_dir, verbose=True)
     print()
     print(format_summary_table(summary))
+    print()
+    print(format_comparisons(summary))
     print(f"\nresults written to {results_dir}/")
+    if not args.no_plots:
+        for path in generate_all_plots(results_dir):
+            print(f"figure -> {path}")
+    return 0
+
+
+def cmd_sweep(args: argparse.Namespace) -> int:
+    config = _load(args.config)
+    results_dir = Path(args.results_dir or config.results_dir)
+    scales = tuple(args.scales) if args.scales else DEFAULT_SWEEP_SCALES
+    frame = run_load_sweep(config, scales, results_dir, verbose=True)
+    sweep = summarize_load_sweep(frame)
+    (results_dir / "load_sweep.json").write_text(json.dumps(sweep, indent=2), encoding="utf-8")
+    print(f"\n{'Load':>6}  {'vs shortest path':>26}  {'vs congestion-aware':>26}")
+    for entry in sweep:
+        cells = []
+        for baseline in ("shortest_path", "congestion_aware"):
+            c = entry[baseline]
+            cells.append(f"{c['mean_diff'] * 100:+.2f} pts (p={c['p_value']:.3f})".rjust(26))
+        print(f"{entry['relative_load']:>6.2f}  {cells[0]}  {cells[1]}")
+    print(f"\nresults written to {results_dir}/load_sweep.csv and load_sweep.json")
     if not args.no_plots:
         for path in generate_all_plots(results_dir):
             print(f"figure -> {path}")
@@ -140,6 +168,13 @@ def build_parser() -> argparse.ArgumentParser:
     experiments.add_argument("--results-dir", default=None)
     experiments.add_argument("--no-plots", action="store_true")
     experiments.set_defaults(func=cmd_experiments)
+
+    sweep = sub.add_parser("sweep", help="benchmark across network load levels")
+    sweep.add_argument("--config", default=None)
+    sweep.add_argument("--results-dir", default=None)
+    sweep.add_argument("--scales", type=float, nargs="+", default=None)
+    sweep.add_argument("--no-plots", action="store_true")
+    sweep.set_defaults(func=cmd_sweep)
 
     plot = sub.add_parser("plot", help="regenerate figures from saved results")
     plot.add_argument("--results-dir", default="results")

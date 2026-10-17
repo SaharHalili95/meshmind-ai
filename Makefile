@@ -1,6 +1,6 @@
 PYTHON ?= .venv/bin/python
 
-.PHONY: install test lint format smoke experiments plot web-data web clean
+.PHONY: install test lint format smoke experiments sweep plot web-data web clean
 
 install:
 	python3 -m venv .venv
@@ -23,6 +23,9 @@ smoke:
 
 experiments:
 	$(PYTHON) scripts/run_experiments.py
+
+sweep:
+	$(PYTHON) -m meshmind.cli sweep
 
 plot:
 	$(PYTHON) -m meshmind.cli plot

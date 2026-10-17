@@ -142,6 +142,57 @@ def plot_metric_comparison(
     return out_path
 
 
+def plot_load_sweep(sweep: list[dict[str, Any]], out_path: Path) -> Path:
+    """PDR gain of Q-learning over each baseline as relative load grows, with 95% CIs.
+
+    Filled markers are significant (permutation p < 0.05); hollow markers are not.
+    """
+    loads = [entry["relative_load"] for entry in sweep]
+    fig, ax = _new_figure()
+    ax.axhline(0, color=INK_SECONDARY, linewidth=1)
+    for baseline in ("shortest_path", "congestion_aware"):
+        label, color = POLICY_STYLE[baseline]
+        gain = [entry[baseline]["mean_diff"] * 100 for entry in sweep]
+        low = [entry[baseline]["ci_low"] * 100 for entry in sweep]
+        high = [entry[baseline]["ci_high"] * 100 for entry in sweep]
+        significant = [entry[baseline]["significant"] for entry in sweep]
+        ax.fill_between(loads, low, high, color=color, alpha=0.16, linewidth=0)
+        ax.plot(loads, gain, color=color, linewidth=2)
+        for x, y, sig in zip(loads, gain, significant, strict=True):
+            ax.plot(
+                x,
+                y,
+                "o",
+                markersize=8,
+                color=color,
+                markerfacecolor=color if sig else SURFACE,
+                markeredgewidth=2,
+            )
+        ax.annotate(
+            f"vs {label.lower()}",
+            (loads[-1], gain[-1]),
+            xytext=(8, 0),
+            textcoords="offset points",
+            va="center",
+            fontsize=9,
+            color=INK_PRIMARY,
+        )
+    seeds = sweep[0]["shortest_path"]["n"] if sweep else 0
+    _title(
+        ax,
+        "Where learning pays off: PDR gain vs. network load",
+        f"Q-learning minus baseline, mean of {seeds} paired seeds, band = 95% bootstrap CI, "
+        "filled = p < 0.05",
+    )
+    ax.set_xlabel("Relative load (1 / capacity scale)", color=INK_SECONDARY)
+    ax.set_ylabel("PDR gain (percentage points)", color=INK_SECONDARY)
+    ax.set_xlim(min(loads) - 0.05, max(loads) + 0.25)
+    fig.tight_layout()
+    fig.savefig(out_path, facecolor=SURFACE)
+    plt.close(fig)
+    return out_path
+
+
 def generate_all_plots(results_dir: str | Path) -> list[Path]:
     results = Path(results_dir)
     summary_path = results / "summary.json"
@@ -157,4 +208,8 @@ def generate_all_plots(results_dir: str | Path) -> list[Path]:
     paths = [plot_reward_curve(history, figures / "reward_curve.png")]
     for filename, metric, title, ylabel in COMPARISONS:
         paths.append(plot_metric_comparison(summary, metric, title, ylabel, figures / filename))
+    sweep_path = results / "load_sweep.json"
+    if sweep_path.exists():
+        sweep = json.loads(sweep_path.read_text(encoding="utf-8"))
+        paths.append(plot_load_sweep(sweep, figures / "load_sweep.png"))
     return paths

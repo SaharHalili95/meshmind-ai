@@ -9,7 +9,13 @@ import pytest
 
 from meshmind.cli import main
 from meshmind.config import ExperimentConfig, TopologyConfig, config_from_dict, load_config
-from meshmind.experiments import POLICY_ORDER, run_experiment_pipeline
+from meshmind.experiments import (
+    POLICY_ORDER,
+    format_comparisons,
+    run_experiment_pipeline,
+    run_load_sweep,
+    summarize_load_sweep,
+)
 from meshmind.plotting import generate_all_plots
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -50,6 +56,14 @@ def test_pipeline_writes_results_and_figures(tmp_path: Path) -> None:
     assert len(history) == len(TINY.seeds) * TINY.train_episodes
     assert json.loads((tmp_path / "summary.json").read_text())["seeds"] == [1, 2]
 
+    comparisons = summary["comparisons"]
+    assert len(comparisons) == 9
+    first = comparisons[0]
+    assert first["metric"] == "pdr" and first["baseline"] == "shortest_path"
+    assert first["ci_low"] <= first["mean_diff"] <= first["ci_high"]
+    assert 0.0 < first["p_value"] <= 1.0
+    assert "p=" in format_comparisons(summary)
+
     paths = generate_all_plots(tmp_path)
     names = {p.name for p in paths}
     assert names == {
@@ -88,3 +102,25 @@ def test_cli_train_then_evaluate(tmp_path: Path, capsys: pytest.CaptureFixture[s
 
 def test_cli_reports_missing_results(tmp_path: Path) -> None:
     assert main(["plot", "--results-dir", str(tmp_path)]) == 1
+
+
+def test_load_sweep_writes_rows_and_figure(tmp_path: Path) -> None:
+    frame = run_load_sweep(TINY, scales=(1.5, 0.7), results_dir=tmp_path)
+    assert len(frame) == 2 * len(TINY.seeds) * len(POLICY_ORDER)
+    assert sorted(frame["relative_load"].unique()) == [round(1 / 1.5, 4), round(1 / 0.7, 4)]
+    assert (tmp_path / "load_sweep.csv").exists()
+
+    sweep = summarize_load_sweep(frame)
+    assert [entry["relative_load"] for entry in sweep] == sorted(e["relative_load"] for e in sweep)
+    assert set(sweep[0]) == {"relative_load", "shortest_path", "congestion_aware", "pdr"}
+    # Less capacity for the same traffic can only lower shortest-path delivery.
+    assert sweep[-1]["pdr"]["shortest_path"] < sweep[0]["pdr"]["shortest_path"]
+
+    run_experiment_pipeline(TINY, tmp_path)
+    (tmp_path / "load_sweep.json").write_text(json.dumps(sweep))
+    assert "load_sweep.png" in {p.name for p in generate_all_plots(tmp_path)}
+
+
+def test_load_sweep_needs_scales(tmp_path: Path) -> None:
+    with pytest.raises(ValueError):
+        run_load_sweep(TINY, scales=(), results_dir=tmp_path)
