@@ -32,7 +32,7 @@ TINY = replace(
 def test_default_yaml_loads() -> None:
     config = load_config(ROOT / "configs" / "default.yaml")
     assert config.topology.name == "abilene"
-    assert config.seeds == (42, 100, 2026)
+    assert config.seeds == (42, 100, 2026, 7, 13, 21, 314, 777, 1234, 9001)
     assert config.environment.max_steps == 20
     assert config.environment.invalid_action_penalty == -100.0
 

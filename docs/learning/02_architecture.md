@@ -115,6 +115,8 @@ flowchart BT
     experiments --> topology
     experiments --> traffic
     experiments --> training
+    experiments --> stats
+    stats
     plotting
     cli --> experiments
     cli --> plotting
@@ -128,7 +130,7 @@ flowchart BT
     classDef l1 fill:#e8f1fc,stroke:#2a78d6,color:#0b0b0b
     classDef l2 fill:#fdf3e1,stroke:#eda100,color:#0b0b0b
     classDef l3 fill:#fdeee7,stroke:#eb6834,color:#0b0b0b
-    class config,topology,traffic,metrics l0
+    class config,topology,traffic,metrics,stats l0
     class environment,agent l1
     class baselines,training,evaluation l2
     class experiments,plotting,cli l3
@@ -332,7 +334,7 @@ sequenceDiagram
 ```mermaid
 flowchart LR
     Y["default.yaml"] -->|load_config| C["ExperimentConfig"]
-    C --> L{{"for seed in<br/>42, 100, 2026"}}
+    C --> L{{"for seed in<br/>10 seeds"}}
 
     L --> B["build_environment"]
     B --> TR["train_agent<br/>3000 episodes<br/>seeds s..s+2999"]
@@ -349,7 +351,7 @@ flowchart LR
         EB
     end
 
-    R --> AGG["aggregate_metrics<br/>mean ± std (ddof=1)"]
+    R --> AGG["aggregate_metrics<br/>mean ± std + stats.py<br/>permutation p, bootstrap CI"]
     AGG --> S["summary.json"]
     R --> PS["per_seed_results.csv"]
     H --> TH["training_history.csv"]
@@ -416,7 +418,8 @@ meshmind-ai/
 │   ├── baselines.py              ← שכבה 2: מדיניות להשוואה
 │   ├── training.py               ← שכבה 2: לולאת אימון
 │   ├── evaluation.py             ← שכבה 2: לולאת הערכה (read-only)
-│   ├── experiments.py            ← שכבה 3: תזמור רב-seed
+│   ├── stats.py                  ← שכבה 0: מבחן פרמוטציות + bootstrap CI
+│   ├── experiments.py            ← שכבה 3: תזמור רב-seed + סריקת עומס
 │   ├── plotting.py               ← שכבה 3: גרפים מקבצים
 │   └── cli.py                    ← שכבה 4: ממשק משתמש
 ├── tests/                        ← בדיקה לכל מודול + conftest משותף

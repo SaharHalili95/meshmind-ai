@@ -117,13 +117,26 @@ Realistic deployment paths:
 
 ## 7. "How do you know the improvement is real?"
 
-* The comparison is paired: all policies are evaluated on identical held-out flow sequences.
-* The PDR gain over shortest path has the same sign and nearly the same size on every seed
-  (+1.42 to +1.58 points).
+* The comparison is paired: all policies are evaluated on identical held-out flow sequences,
+  so the unit of analysis is the per-seed difference.
+* 10 seeds and an **exact sign-flip permutation test**: under H0 each paired difference is
+  equally likely to be positive or negative, so the 2¹⁰ = 1,024 sign patterns give the exact
+  null distribution. No normality assumption, no SciPy. The PDR gain over shortest path
+  (+1.79 pts, 95% bootstrap CI [+1.53, +2.08]) has p = 0.002, the smallest value 10 pairs
+  can produce, and is positive on 10/10 seeds.
+* **Why 3 seeds were not enough:** with n = 3 the smallest attainable p-value is 2/2³ = 0.25,
+  so no 3-seed result can ever be significant, however consistent it looks. Moving to 10
+  seeds is what turned "level with congestion-aware" into a significant win
+  (+0.32 pts PDR, p = 0.006).
+* Not everything is significant, and that is reported too: latency vs shortest path
+  (+0.51 ms, p = 0.17) is a tie.
 * Evaluation can't leak training data: the scenario seed ranges are disjoint, and the
   Q-table is provably frozen (a test asserts it is unchanged).
-* What I would add next: 10+ seeds with a paired t-test or bootstrap CI, a sweep over load
-  levels to show where the crossover happens, and a link-failure scenario.
+* The load sweep repeats everything at five capacity levels. Against shortest path the gain
+  is positive at every load; against congestion-aware there is a **crossover near load
+  0.9**: below it live global state wins (−0.6 pts), above it the learned policy wins by up
+  to +2.5 pts. Reporting where the method loses is as important as where it wins.
+  What I would add next: a link-failure scenario and topology generalisation.
 
 ## 8. Engineering decisions to highlight
 
@@ -133,5 +146,5 @@ Realistic deployment paths:
   global RNG state, so every result in the README regenerates exactly.
 * Configuration is typed (frozen dataclasses), validated on construction, and loaded
   strictly: unknown YAML keys raise instead of being silently ignored.
-* 116 tests run in about 2 s, including exact Bellman-update arithmetic, zero
+* 130 tests run in about 4 s, including exact Bellman-update arithmetic, zero
   bootstrapping on terminal transitions, and an end-to-end pipeline + plotting test.

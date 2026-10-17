@@ -27,7 +27,7 @@ agent:
   epsilon_decay: 0.998
 
 experiment:
-  seeds: [42, 100, 2026]
+  seeds: [42, 100, 2026, 7, 13, 21, 314, 777, 1234, 9001]
   train_episodes: 3000
   eval_episodes: 100
   results_dir: results

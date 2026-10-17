@@ -29,11 +29,11 @@ learning hub and a troubleshooting guide, in English and Hebrew.
   handling, epsilon-greedy with decay, and an evaluation mode that is enforced as read-only.
 * **Congestion-aware network simulator:** capacity, propagation latency, a quadratic
   congestion penalty above 80% utilization, proportional-sharing packet loss, and load decay.
-* **Reproducible research protocol:** 3 seeds, disjoint train/eval scenarios, paired
-  comparison on identical traffic, mean ± std aggregation, and every result regenerated
-  from one command.
+* **Reproducible research protocol:** 10 seeds, disjoint train/eval scenarios, paired
+  comparison on identical traffic, exact permutation tests with bootstrap confidence
+  intervals, a load sweep, and every result regenerated from one command.
 * **Engineering quality:** typed and validated config, a strict YAML loader, no global RNG,
-  116 pytest tests (about 2 s), and `ruff check` + `ruff format` clean.
+  130 pytest tests (about 4 s), and `ruff check` + `ruff format` clean.
 * **Interactive website:** Vue 3 + TypeScript + PrimeVue, deployed to GitHub Pages by
   GitHub Actions. The browser port reproduces the Python results (Q-learning 0.605 vs
   shortest path 0.593 PDR on seed 42) and is covered by 26 Vitest tests, including
@@ -42,25 +42,43 @@ learning hub and a troubleshooting guide, in English and Hebrew.
 ## Results
 
 Abilene topology, `high` traffic profile (60-120 Mb/s flows), 3,000 training episodes,
-100 held-out evaluation episodes (2,500 flows) per seed. Mean ± std over seeds 42, 100, 2026.
+100 held-out evaluation episodes (2,500 flows) per seed. Mean ± std over 10 seeds.
 
-| Policy | PDR ↑ | PLR ↓ | Latency (ms) ↓ | Throughput ↑ | Link util | Failures |
+| Policy | PDR ↑ | PLR ↓ | Latency (ms) ↓ | Throughput ↑ | Link util ↓ | Failures |
 |---|---|---|---|---|---|---|
-| **Q-learning** | **0.607 ± 0.008** | **0.393 ± 0.008** | 79.50 ± 0.27 | **54.53 ± 0.53** | 0.382 | 0 |
-| Shortest path | 0.592 ± 0.007 | 0.408 ± 0.007 | **78.30 ± 0.71** | 53.16 ± 0.45 | 0.381 | 0 |
-| Congestion-aware | 0.607 ± 0.009 | 0.394 ± 0.009 | 80.62 ± 1.43 | 54.49 ± 0.54 | 0.417 | 0 |
-| Random | 0.212 ± 0.004 | 0.788 ± 0.004 | 182.67 ± 2.99 | 19.09 ± 0.40 | 0.662 | 1019 ± 33 |
+| **Q-learning** | **0.611 ± 0.008** | **0.389 ± 0.008** | 77.92 ± 1.68 | **54.94 ± 0.57** | **0.379** | 0 |
+| Shortest path | 0.594 ± 0.008 | 0.406 ± 0.008 | **77.41 ± 1.53** | 53.33 ± 0.55 | 0.379 | 0 |
+| Congestion-aware | 0.608 ± 0.008 | 0.392 ± 0.008 | 79.43 ± 1.58 | 54.65 ± 0.53 | 0.416 | 0 |
+| Random | 0.217 ± 0.006 | 0.783 ± 0.006 | 183.89 ± 4.21 | 19.49 ± 0.52 | 0.663 | 986 ± 31 |
+
+**Is the difference real?** Q-learning minus each baseline, paired by seed (n = 10), with
+a 95% bootstrap CI and an exact sign-flip permutation test (`src/meshmind/stats.py`):
+
+| Comparison | Mean difference | 95% CI | p | Seeds better |
+|---|---|---|---|---|
+| PDR vs shortest path | **+1.79 pts** | [+1.53, +2.08] | **0.002** | 10/10 |
+| PDR vs congestion-aware | **+0.32 pts** | [+0.11, +0.55] | **0.006** | 9/10 |
+| Latency vs congestion-aware | **−1.51 ms** | [−2.07, −0.91] | **0.006** | 9/10 |
+| Link utilization vs congestion-aware | **−3.65 pts** | [−3.74, −3.57] | **0.002** | 10/10 |
+| Latency vs shortest path | +0.51 ms | [−0.14, +1.12] | 0.168 | 3/10 |
 
 **What the numbers say:**
 
-* Q-learning delivers **more traffic than shortest-path routing on every seed**
-  (+1.4 to +1.6 PDR points, paired on identical traffic).
-* It **matches the congestion-aware router**, which recomputes Dijkstra on live *global*
-  link state at every hop. Q-learning gets there from a 3-level *local* signal, with fewer
-  hops (2.54 vs 2.72), **8.5% less network-wide link utilization**, and lower latency on
-  every seed.
-* Under light load (`moderate`, `dynamic`) all non-random policies are within about 1-2
-  points of each other. The learned policy pays off when the network is congested.
+* Q-learning delivers **more traffic than shortest-path routing on all 10 seeds**
+  (+1.79 PDR points, p = 0.002, the smallest p-value 10 pairs can produce) at no
+  significant latency cost.
+* It also **beats the congestion-aware router**, which recomputes Dijkstra on live
+  *global* link state at every hop, on all three metrics with p < 0.01: more delivery,
+  1.5 ms lower latency and **8.8% less network-wide link utilization**, from a 3-level
+  *local* signal and with fewer hops (2.53 vs 2.72).
+* **Load sweep:** repeating the benchmark at five load levels shows the gain over shortest
+  path at every load (+1.1 to +1.8 pts), and a crossover against congestion-aware near
+  load 0.9: below it the router with live global state is slightly better (−0.6 pts),
+  above it Q-learning pulls ahead up to **+2.5 pts**. All 10 cells are significant.
+
+<p align="center">
+  <img src="results/figures/load_sweep.png" width="80%" alt="PDR gain of Q-learning versus network load"/>
+</p>
 
 <p align="center">
   <img src="results/figures/reward_curve.png" width="48%" alt="Training reward curve"/>
@@ -127,7 +145,8 @@ pip install -e ".[dev]"
 
 ```bash
 python -m meshmind.cli smoke-test       # 5-second end-to-end sanity run
-python -m meshmind.cli experiments      # full 3-seed benchmark (~20 s) + figures
+python -m meshmind.cli experiments      # full 10-seed benchmark (~1 min) + figures
+python -m meshmind.cli sweep            # 5 load levels x 10 seeds (~6 min)
 python -m meshmind.cli plot             # regenerate figures from results/
 
 python -m meshmind.cli train --seed 42 --output results/q_table.json

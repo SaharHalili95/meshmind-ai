@@ -30,7 +30,14 @@
     "seeds": [
       42,
       100,
-      2026
+      2026,
+      7,
+      13,
+      21,
+      314,
+      777,
+      1234,
+      9001
     ],
     "train_episodes": 3000,
     "eval_episodes": 100,
@@ -39,129 +46,246 @@
   "seeds": [
     42,
     100,
-    2026
+    2026,
+    7,
+    13,
+    21,
+    314,
+    777,
+    1234,
+    9001
   ],
   "aggregation": "mean and sample std (ddof=1) across seeds",
   "policies": {
     "q_learning": {
       "pdr": {
-        "mean": 0.6070103435512767,
-        "std": 0.008315422557794237
+        "mean": 0.6114623108110087,
+        "std": 0.007700106161333636
       },
       "plr": {
-        "mean": 0.3929896564487232,
-        "std": 0.008315422557794237
+        "mean": 0.3885376891889913,
+        "std": 0.007700106161333636
       },
       "mean_latency_ms": {
-        "mean": 79.49791827938243,
-        "std": 0.26738152945052984
+        "mean": 77.91853701727857,
+        "std": 1.6773399467083483
       },
       "mean_throughput": {
-        "mean": 54.533081261058896,
-        "std": 0.5253991554131938
+        "mean": 54.93647879577524,
+        "std": 0.5662201860079363
       },
       "avg_link_utilization": {
-        "mean": 0.38149218858698625,
-        "std": 0.0022347088282991686
+        "mean": 0.37932199506111663,
+        "std": 0.004674548294004329
       },
       "routing_failures": {
         "mean": 0.0,
         "std": 0.0
       },
       "mean_hops": {
-        "mean": 2.5369333333333333,
-        "std": 0.008544783984006547
+        "mean": 2.52676,
+        "std": 0.018965653165657122
       }
     },
     "shortest_path": {
       "pdr": {
-        "mean": 0.5917670080348528,
-        "std": 0.007400237092755188
+        "mean": 0.5935799665240837,
+        "std": 0.007950118474647638
       },
       "plr": {
-        "mean": 0.4082329919651471,
-        "std": 0.007400237092755188
+        "mean": 0.4064200334759163,
+        "std": 0.007950118474647638
       },
       "mean_latency_ms": {
-        "mean": 78.29597214196308,
-        "std": 0.7090157319624278
+        "mean": 77.40944237437517,
+        "std": 1.5313950254015394
       },
       "mean_throughput": {
-        "mean": 53.16383495153224,
-        "std": 0.45266969890418396
+        "mean": 53.329391094435564,
+        "std": 0.5548628717362982
       },
       "avg_link_utilization": {
-        "mean": 0.38047703782116743,
-        "std": 0.0013071886263753647
+        "mean": 0.37881052675345817,
+        "std": 0.0037929266558515864
       },
       "routing_failures": {
         "mean": 0.0,
         "std": 0.0
       },
       "mean_hops": {
-        "mean": 2.5524000000000004,
-        "std": 0.016380476183554607
+        "mean": 2.5452000000000004,
+        "std": 0.018549153919009718
       }
     },
     "congestion_aware": {
       "pdr": {
-        "mean": 0.6064940860066558,
-        "std": 0.008484847602662125
+        "mean": 0.608254332409238,
+        "std": 0.007703597700522077
       },
       "plr": {
-        "mean": 0.39350591399334417,
-        "std": 0.008484847602662124
+        "mean": 0.391745667590762,
+        "std": 0.007703597700522077
       },
       "mean_latency_ms": {
-        "mean": 80.62207974636749,
-        "std": 1.4278605235809065
+        "mean": 79.43165904087601,
+        "std": 1.5777223376470304
       },
       "mean_throughput": {
-        "mean": 54.486670829151315,
-        "std": 0.5427524428110405
+        "mean": 54.64793217076684,
+        "std": 0.5326409161338151
       },
       "avg_link_utilization": {
-        "mean": 0.41722635575777883,
-        "std": 0.0012149880189169355
+        "mean": 0.4158431064731018,
+        "std": 0.004024938308537786
       },
       "routing_failures": {
         "mean": 0.0,
         "std": 0.0
       },
       "mean_hops": {
-        "mean": 2.723733333333333,
-        "std": 0.006416645021608481
+        "mean": 2.72144,
+        "std": 0.01817661501306923
       }
     },
     "random": {
       "pdr": {
-        "mean": 0.21242456462224732,
-        "std": 0.0035773804501769767
+        "mean": 0.21691166157667113,
+        "std": 0.005927696706268509
       },
       "plr": {
-        "mean": 0.7875754353777528,
-        "std": 0.003577380450176996
+        "mean": 0.7830883384233288,
+        "std": 0.005927696706268497
       },
       "mean_latency_ms": {
-        "mean": 182.67387970133464,
-        "std": 2.990529054133716
+        "mean": 183.89084019627788,
+        "std": 4.209023599243653
       },
       "mean_throughput": {
-        "mean": 19.085625035291663,
-        "std": 0.4048721022296427
+        "mean": 19.48849807747464,
+        "std": 0.5214492619846056
       },
       "avg_link_utilization": {
-        "mean": 0.6617138261300675,
-        "std": 0.0043697838673082065
+        "mean": 0.6627375943601888,
+        "std": 0.0064859384265060745
       },
       "routing_failures": {
-        "mean": 1019.3333333333334,
-        "std": 33.24655370611115
+        "mean": 985.8,
+        "std": 30.73832208245018
       },
       "mean_hops": {
-        "mean": 4.341681154581843,
-        "std": 0.07791130246662498
+        "mean": 4.387457893276343,
+        "std": 0.06305686780614644
       }
     }
-  }
+  },
+  "comparisons": [
+    {
+      "metric": "pdr",
+      "baseline": "shortest_path",
+      "mean_diff": 0.017882344286924902,
+      "ci_low": 0.015261695242365448,
+      "ci_high": 0.020771302552687023,
+      "p_value": 0.001953125,
+      "wins": 10,
+      "n": 10,
+      "higher_is_better": true,
+      "significant": true
+    },
+    {
+      "metric": "mean_latency_ms",
+      "baseline": "shortest_path",
+      "mean_diff": 0.5090946429033792,
+      "ci_low": -0.13912088272562123,
+      "ci_high": 1.1227634885646736,
+      "p_value": 0.16796875,
+      "wins": 3,
+      "n": 10,
+      "higher_is_better": false,
+      "significant": false
+    },
+    {
+      "metric": "avg_link_utilization",
+      "baseline": "shortest_path",
+      "mean_diff": 0.0005114683076584802,
+      "ci_low": -0.0005873174871458669,
+      "ci_high": 0.0016032488576693343,
+      "p_value": 0.416015625,
+      "wins": 3,
+      "n": 10,
+      "higher_is_better": false,
+      "significant": false
+    },
+    {
+      "metric": "pdr",
+      "baseline": "congestion_aware",
+      "mean_diff": 0.003207978401770706,
+      "ci_low": 0.0011269358141141241,
+      "ci_high": 0.005491241405982088,
+      "p_value": 0.005859375,
+      "wins": 9,
+      "n": 10,
+      "higher_is_better": true,
+      "significant": true
+    },
+    {
+      "metric": "mean_latency_ms",
+      "baseline": "congestion_aware",
+      "mean_diff": -1.513122023597448,
+      "ci_low": -2.068165962820086,
+      "ci_high": -0.9139232753373552,
+      "p_value": 0.005859375,
+      "wins": 9,
+      "n": 10,
+      "higher_is_better": false,
+      "significant": true
+    },
+    {
+      "metric": "avg_link_utilization",
+      "baseline": "congestion_aware",
+      "mean_diff": -0.03652111141198518,
+      "ci_low": -0.03738280407931529,
+      "ci_high": -0.03565422825515203,
+      "p_value": 0.001953125,
+      "wins": 10,
+      "n": 10,
+      "higher_is_better": false,
+      "significant": true
+    },
+    {
+      "metric": "pdr",
+      "baseline": "random",
+      "mean_diff": 0.39455064923433747,
+      "ci_low": 0.39017138624470804,
+      "ci_high": 0.3983913388186396,
+      "p_value": 0.001953125,
+      "wins": 10,
+      "n": 10,
+      "higher_is_better": true,
+      "significant": true
+    },
+    {
+      "metric": "mean_latency_ms",
+      "baseline": "random",
+      "mean_diff": -105.9723031789993,
+      "ci_low": -108.68872235480812,
+      "ci_high": -102.91136312442605,
+      "p_value": 0.001953125,
+      "wins": 10,
+      "n": 10,
+      "higher_is_better": false,
+      "significant": true
+    },
+    {
+      "metric": "avg_link_utilization",
+      "baseline": "random",
+      "mean_diff": -0.283415599299072,
+      "ci_low": -0.2868970489602034,
+      "ci_high": -0.2798744092768177,
+      "p_value": 0.001953125,
+      "wins": 10,
+      "n": 10,
+      "higher_is_better": false,
+      "significant": true
+    }
+  ]
 }

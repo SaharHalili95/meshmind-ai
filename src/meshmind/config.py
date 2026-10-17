@@ -75,7 +75,7 @@ class ExperimentConfig:
     traffic: TrafficConfig = field(default_factory=TrafficConfig)
     environment: EnvironmentConfig = field(default_factory=EnvironmentConfig)
     agent: AgentConfig = field(default_factory=AgentConfig)
-    seeds: tuple[int, ...] = (42, 100, 2026)
+    seeds: tuple[int, ...] = (42, 100, 2026, 7, 13, 21, 314, 777, 1234, 9001)
     train_episodes: int = 3000
     eval_episodes: int = 100
     results_dir: str = "results"

@@ -1,0 +1,167 @@
+[
+  {
+    "relative_load": 0.6667,
+    "shortest_path": {
+      "metric": "pdr",
+      "baseline": "shortest_path",
+      "mean_diff": 0.015362571260087898,
+      "ci_low": 0.013047346966769032,
+      "ci_high": 0.017510636715606532,
+      "p_value": 0.001953125,
+      "wins": 10,
+      "n": 10,
+      "higher_is_better": true,
+      "significant": true
+    },
+    "congestion_aware": {
+      "metric": "pdr",
+      "baseline": "congestion_aware",
+      "mean_diff": -0.006092866359949056,
+      "ci_low": -0.008652764564118016,
+      "ci_high": -0.0036305442549456894,
+      "p_value": 0.001953125,
+      "wins": 0,
+      "n": 10,
+      "higher_is_better": true,
+      "significant": true
+    },
+    "pdr": {
+      "q_learning": 0.863864762792525,
+      "shortest_path": 0.8485021915324371,
+      "congestion_aware": 0.8699576291524741,
+      "random": 0.3924599813070696
+    }
+  },
+  {
+    "relative_load": 0.8,
+    "shortest_path": {
+      "metric": "pdr",
+      "baseline": "shortest_path",
+      "mean_diff": 0.01606178628691527,
+      "ci_low": 0.012773069851349138,
+      "ci_high": 0.019242773678404955,
+      "p_value": 0.001953125,
+      "wins": 10,
+      "n": 10,
+      "higher_is_better": true,
+      "significant": true
+    },
+    "congestion_aware": {
+      "metric": "pdr",
+      "baseline": "congestion_aware",
+      "mean_diff": -0.00731395174714643,
+      "ci_low": -0.010345153409633046,
+      "ci_high": -0.004601279761073502,
+      "p_value": 0.001953125,
+      "wins": 0,
+      "n": 10,
+      "higher_is_better": true,
+      "significant": true
+    },
+    "pdr": {
+      "q_learning": 0.7625420691008278,
+      "shortest_path": 0.7464802828139124,
+      "congestion_aware": 0.7698560208479741,
+      "random": 0.3079995337040726
+    }
+  },
+  {
+    "relative_load": 1.0,
+    "shortest_path": {
+      "metric": "pdr",
+      "baseline": "shortest_path",
+      "mean_diff": 0.017882344286924902,
+      "ci_low": 0.015261695242365448,
+      "ci_high": 0.020771302552687023,
+      "p_value": 0.001953125,
+      "wins": 10,
+      "n": 10,
+      "higher_is_better": true,
+      "significant": true
+    },
+    "congestion_aware": {
+      "metric": "pdr",
+      "baseline": "congestion_aware",
+      "mean_diff": 0.003207978401770706,
+      "ci_low": 0.0011269358141141241,
+      "ci_high": 0.005491241405982088,
+      "p_value": 0.005859375,
+      "wins": 9,
+      "n": 10,
+      "higher_is_better": true,
+      "significant": true
+    },
+    "pdr": {
+      "q_learning": 0.6114623108110087,
+      "shortest_path": 0.5935799665240837,
+      "congestion_aware": 0.6082543324092379,
+      "random": 0.21691166157667113
+    }
+  },
+  {
+    "relative_load": 1.1765,
+    "shortest_path": {
+      "metric": "pdr",
+      "baseline": "shortest_path",
+      "mean_diff": 0.016546905401005153,
+      "ci_low": 0.014689004620905334,
+      "ci_high": 0.01842231961872013,
+      "p_value": 0.001953125,
+      "wins": 10,
+      "n": 10,
+      "higher_is_better": true,
+      "significant": true
+    },
+    "congestion_aware": {
+      "metric": "pdr",
+      "baseline": "congestion_aware",
+      "mean_diff": 0.014170003972983519,
+      "ci_low": 0.011981941593551747,
+      "ci_high": 0.016110484249360506,
+      "p_value": 0.001953125,
+      "wins": 10,
+      "n": 10,
+      "higher_is_better": true,
+      "significant": true
+    },
+    "pdr": {
+      "q_learning": 0.4909204406104049,
+      "shortest_path": 0.4743735352093997,
+      "congestion_aware": 0.47675043663742134,
+      "random": 0.1617065362391954
+    }
+  },
+  {
+    "relative_load": 1.4286,
+    "shortest_path": {
+      "metric": "pdr",
+      "baseline": "shortest_path",
+      "mean_diff": 0.011116935750652956,
+      "ci_low": 0.010046313435357673,
+      "ci_high": 0.012159739831116411,
+      "p_value": 0.001953125,
+      "wins": 10,
+      "n": 10,
+      "higher_is_better": true,
+      "significant": true
+    },
+    "congestion_aware": {
+      "metric": "pdr",
+      "baseline": "congestion_aware",
+      "mean_diff": 0.02471672740588306,
+      "ci_low": 0.02308935299661694,
+      "ci_high": 0.02622213349939288,
+      "p_value": 0.001953125,
+      "wins": 10,
+      "n": 10,
+      "higher_is_better": true,
+      "significant": true
+    },
+    "pdr": {
+      "q_learning": 0.36020106225666126,
+      "shortest_path": 0.34908412650600834,
+      "congestion_aware": 0.3354843348507782,
+      "random": 0.1123823022614836
+    }
+  }
+]

@@ -29,7 +29,7 @@ flowchart TD
 
 | Layer | Modules | Depends on |
 |---|---|---|
-| 0: primitives | `config`, `topology`, `traffic`, `metrics` | numpy, networkx, pyyaml |
+| 0: primitives | `config`, `topology`, `traffic`, `metrics`, `stats` | numpy, networkx, pyyaml |
 | 1: simulation | `environment` | layer 0 |
 | 2: policies | `agent`, `baselines` | layer 0-1 (the agent depends only on `config`) |
 | 3: loops | `training`, `evaluation` | layers 0-2 |
@@ -105,8 +105,9 @@ turns `eval_mode` on and restores it in a `finally` block.
 
 | File | Content |
 |---|---|
-| `results/summary.json` | config snapshot + mean/std per policy per metric |
+| `results/summary.json` | config snapshot, mean/std per policy per metric, paired significance tests |
 | `results/per_seed_results.csv` | one row per `(seed, policy)` with every metric |
 | `results/training_history.csv` | one row per `(seed, episode)`: reward, TD error, epsilon, PDR, ... |
+| `results/load_sweep.csv` / `.json` | per `(load level, seed, policy)` metrics, and the paired gains with CI and p |
 | `results/q_table_seed*.json` | learned Q-tables (git-ignored) |
 | `results/figures/*.png` | reward curve + four comparison charts |
