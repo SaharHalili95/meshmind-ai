@@ -244,7 +244,7 @@ penalty(e) = latency(e) · ((ρ − 0.8) / 0.2)²   if ρ &gt; 0.8, else 0</div>
 .layer-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.625rem; }
 .layer-list li { display: flex; gap: 0.75rem; align-items: baseline; line-height: 1.5; }
 .badge { flex-shrink: 0; width: 26px; height: 26px; border-radius: 8px; display: grid; place-items: center; background: color-mix(in srgb, var(--app-accent) 12%, transparent); color: var(--app-accent); font-weight: 700; }
-.mdp { display: grid; grid-template-columns: max-content 1fr; gap: 0.5rem 1rem; margin: 0 0 1rem; line-height: 1.55; }
+.mdp { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 0.5rem 1rem; margin: 0 0 1rem; line-height: 1.55; }
 .mdp dt { font-weight: 600; color: var(--app-text-muted); }
 .mdp dd { margin: 0; }
 .lifecycle { list-style: none; margin: 0 0 1rem; padding: 0; display: grid; gap: 0.5rem; }
@@ -253,6 +253,6 @@ penalty(e) = latency(e) · ((ρ − 0.8) / 0.2)²   if ρ &gt; 0.8, else 0</div>
 .lifecycle li.failed { border-color: var(--load-3); }
 .lifecycle li.hop, .lifecycle li.start { border-color: var(--chart-series-1); }
 @media (max-width: 1000px) {
-  .below { grid-template-columns: 1fr; }
+  .below { grid-template-columns: minmax(0, 1fr); }
 }
 </style>

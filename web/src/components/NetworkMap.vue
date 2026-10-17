@@ -114,6 +114,15 @@ function midpoint(a: number, b: number) {
 .pulse { fill: none; stroke: var(--chart-series-1); stroke-width: 2; opacity: 0.5; animation: pulse 1.2s ease-out infinite; transform-box: fill-box; transform-origin: center; }
 @keyframes pulse { from { transform: scale(0.7); opacity: 0.7; } to { transform: scale(1.25); opacity: 0; } }
 @media (prefers-reduced-motion: reduce) { .pulse { animation: none; } }
+/* On phones the map shrinks about 3x: drop the small labels and enlarge the nodes so they stay readable. */
+@media (max-width: 640px) {
+  .label, .link-label { display: none; }
+  .dot { r: 30px; }
+  .pulse { r: 42px; }
+  .short { font-size: 20px; transform: translateY(3px); transform-box: fill-box; }
+  .path { stroke-width: 7; }
+  .last-path { stroke-width: 5; }
+}
 .legend { display: flex; flex-wrap: wrap; gap: 0.5rem 1.25rem; font-size: 0.75rem; color: var(--app-text-muted); margin-top: 0.5rem; }
 .legend span { display: inline-flex; align-items: center; gap: 0.375rem; }
 .sw { width: 18px; height: 6px; border-radius: 3px; display: inline-block; }

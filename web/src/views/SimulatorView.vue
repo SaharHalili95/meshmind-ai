@@ -375,6 +375,7 @@ const comparisonChart = computed(() => {
       </div>
       <div v-if="comparison" class="grid-2">
         <ChartCanvas :build="comparisonChart" :label="t('sim.compareTitle')" :height="240" />
+        <div class="table-wrap">
         <table class="data-table">
           <thead>
             <tr><th>{{ t('results.policy') }}</th><th>PDR</th><th>{{ t('metrics.mean_latency_ms') }}</th><th>{{ t('metrics.routing_failures') }}</th></tr>
@@ -388,6 +389,7 @@ const comparisonChart = computed(() => {
             </tr>
           </tbody>
         </table>
+        </div>
       </div>
       <p v-if="comparison && trainedEpisodes === 0" class="muted small">{{ t('sim.untrained') }}</p>
     </section>
@@ -430,6 +432,10 @@ const comparisonChart = computed(() => {
 .last .bad { color: var(--load-3); }
 .compare .grid-2 { align-items: center; }
 @media (max-width: 1100px) {
-  .sim-grid { grid-template-columns: 1fr; }
+  .sim-grid { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 640px) {
+  .train-action { margin-inline-start: 0; }
+  .q-list li { grid-template-columns: 6rem 1fr auto 1rem; }
 }
 </style>

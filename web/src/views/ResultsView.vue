@@ -125,8 +125,8 @@ const rewardChart = computed(() => {
 
     <div class="grid-2">
       <section class="panel">
+        <h2>{{ t('results.comparison') }}</h2>
         <div class="panel-head">
-          <h2>{{ t('results.comparison') }}</h2>
           <SelectButton v-model="metric" :options="metricOptions" option-label="label" option-value="value" :allow-empty="false" size="small" />
         </div>
         <ChartCanvas :build="comparisonChart" :label="t('results.comparison')" :height="300" />
@@ -167,6 +167,7 @@ const rewardChart = computed(() => {
     <div class="grid-2">
       <section class="panel">
         <h2>{{ t('results.pairedTitle') }}</h2>
+        <div class="table-wrap">
         <table class="data-table">
           <thead>
             <tr>
@@ -183,6 +184,7 @@ const rewardChart = computed(() => {
             </tr>
           </tbody>
         </table>
+        </div>
         <p class="muted note">{{ t('results.pairedNote') }}</p>
       </section>
       <section class="panel">
@@ -209,8 +211,7 @@ const rewardChart = computed(() => {
 .question { font-size: 1.125rem; margin: 0.375rem 0 0.5rem; max-width: 760px; line-height: 1.45; }
 .hero p { margin: 0; max-width: 760px; line-height: 1.6; }
 .cta { display: flex; gap: 0.75rem; flex-wrap: wrap; }
-.panel-head { display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1rem; }
-.panel-head h2 { margin: 0; }
+.panel-head { margin-bottom: 1rem; }
 .note { font-size: 0.8125rem; margin: 0.75rem 0 0; line-height: 1.55; }
 .table-panel { margin: 1rem 0; }
 .table-wrap { overflow-x: auto; }
@@ -221,7 +222,7 @@ const rewardChart = computed(() => {
 .swatch.congestion_aware { background: var(--chart-series-3); }
 .swatch.random { background: var(--chart-series-4); }
 .gain { font-weight: 650; }
-.setup { display: grid; grid-template-columns: max-content 1fr; gap: 0.5rem 1.25rem; margin: 0; line-height: 1.5; }
+.setup { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 0.5rem 1.25rem; margin: 0; line-height: 1.5; }
 .setup dt { color: var(--app-text-muted); font-weight: 550; }
 .setup dd { margin: 0; }
 </style>
