@@ -219,6 +219,10 @@ queues or TCP dynamics. The state space is deliberately small so that a table wo
 Moving to real networks would need function approximation (e.g. GNNs), delayed and noisy
 telemetry, and safety guardrails. See the [interview guide](docs/interview_guide.md#6-scaling-limits-to-real-systems).
 
+## Credits
+
+The `abilene` scenario is based on the public topology of the Abilene research backbone (Internet2). Traffic and results are simulated.
+
 ## License
 
 MIT, see [LICENSE](LICENSE).
